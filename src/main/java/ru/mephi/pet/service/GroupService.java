@@ -5,6 +5,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.stereotype.Service;
 import ru.mephi.pet.domain.*;
 import ru.mephi.pet.repository.GroupRepository;
+import ru.mephi.pet.repository.TaskListRepository;
 import ru.mephi.pet.repository.UserRepository;
 
 import java.util.LinkedList;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 public class GroupService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final TaskListRepository taskListRepository;
     private final GroupMapper groupMapper;
     private final UserMapper userMapper;
     private final TaskListMapper taskListMapper;
@@ -83,15 +85,15 @@ public class GroupService {
         return groupRepository.save(group);
     }
 
-    public void deleteList(Long id, TaskListDto list) { // ToDo как удалить из базы данных список
+    public void deleteList(Long id, TaskListDto list) {
         groupRepository.findById(id).orElseThrow().getTasks().remove(taskListMapper.toEntity(list));
-        throw new NotImplementedException();
+        taskListRepository.deleteById(list.getId());
     }
 
-    public void deleteUser(Long id, User userDto) { // ToDo как реализовать удаление группы из множества у пользователя?
+    public void deleteUser(Long id, UserDto userDto) {
         Group group = groupRepository.findById(id).orElseThrow();
-        //user.getGroups().remove(group);
-        throw new NotImplementedException();
+        userRepository.findById(userDto.getId()).orElseThrow().getGroups().remove(group);
+        group.getUsers().remove(userMapper.toEntity(userDto));
     }
 
     public void deleteGroup(Long id) {

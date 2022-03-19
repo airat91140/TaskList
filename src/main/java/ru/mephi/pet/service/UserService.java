@@ -1,10 +1,10 @@
 package ru.mephi.pet.service;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
 import ru.mephi.pet.domain.*;
+import ru.mephi.pet.repository.GroupRepository;
+import ru.mephi.pet.repository.TaskListRepository;
 import ru.mephi.pet.repository.UserRepository;
 
 import java.util.LinkedList;
@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
+    private final TaskListRepository taskListRepository;
     private final UserMapper userMapper;
     private final TaskListMapper taskListMapper;
 
@@ -46,9 +48,9 @@ public class UserService {
         userRepository.findById(id).orElseThrow().getTasks().add(taskListMapper.toEntity(list));
     }
 
-    public void deleteList(Long id, TaskListDto list) { // ToDo Как удалить из базы данных этот список?
+    public void deleteList(Long id, TaskListDto list) {
         userRepository.findById(id).orElseThrow().getTasks().remove(taskListMapper.toEntity(list));
-        throw new NotImplementedException();
+        taskListRepository.deleteById(list.getId());
     }
 
     public UserDto saveUser (UserDto user) {

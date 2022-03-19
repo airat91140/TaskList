@@ -1,7 +1,6 @@
 package ru.mephi.pet.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mephi.pet.domain.*;
@@ -60,11 +59,6 @@ public class UserController {
     public ResponseEntity<Void> addList(@PathVariable Long id, @RequestBody TaskListDto list) {
         userService.addList(id, list);
         return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<UserDto> login(@RequestBody String login, @RequestBody String password) {
-        return ResponseEntity.ok(userService.login(login, password));
     }
 
     @PutMapping("/updatePassword{id}")

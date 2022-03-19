@@ -46,13 +46,13 @@ public class GroupController {
     }
 
     @DeleteMapping("/deleteList{id}{list}")
-    public ResponseEntity<Void> deleteList(@PathVariable Long id, @PathVariable TaskList list){
+    public ResponseEntity<Void> deleteList(@PathVariable Long id, @PathVariable TaskListDto list){
         groupService.deleteList(id, list);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/deleteUser{id}{user}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id, @PathVariable User user) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id, @PathVariable UserDto user) {
         groupService.deleteUser(id, user);
         return ResponseEntity.noContent().build();
     }
@@ -63,13 +63,13 @@ public class GroupController {
     }
 
     @PostMapping("/addList{id}{list}")
-    public ResponseEntity<Void> addList(@PathVariable Long id, @PathVariable TaskList list) {
+    public ResponseEntity<Void> addList(@PathVariable Long id, @PathVariable TaskListDto list) {
         groupService.addList(id, list);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/addUser{id}{user}")
-    public ResponseEntity<Void> addUser(@PathVariable Long id, @PathVariable User user) {
+    public ResponseEntity<Void> addUser(@PathVariable Long id, @PathVariable UserDto user) {
         groupService.addUser(id, user);
         return ResponseEntity.noContent().build();
     }
