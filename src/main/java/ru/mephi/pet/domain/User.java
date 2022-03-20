@@ -17,10 +17,9 @@ public class User {
     private Long id;
     @Column(unique = true, nullable = false)
     private String login;
-    @Column(nullable = false)
     private String password;
-    @Column(unique = true)
     private String email;
+    @Column(nullable = false)
     private String name;
     @OneToMany
     private Set<TaskList> tasks;

@@ -31,6 +31,10 @@ public class UserService {
         return userMapper.toDto(userRepository.findById(id).orElseThrow());
     }
 
+    public String getEmail(Long id) {
+        return userRepository.findById(id).orElseThrow().getEmail();
+    }
+
     public Iterable<TaskListDto> getUserLists(Long id) {
         return userRepository.findById(id)
                 .orElseThrow()
@@ -45,7 +49,8 @@ public class UserService {
     }
 
     public void addList(Long id, TaskListDto list) {
-        userRepository.findById(id).orElseThrow().getTasks().add(taskListMapper.toEntity(list));
+        TaskList tasks = taskListRepository.save(taskListMapper.toEntity(list));
+        userRepository.findById(id).orElseThrow().getTasks().add(tasks);
     }
 
     public void deleteList(Long id, TaskListDto list) {
@@ -53,7 +58,7 @@ public class UserService {
         taskListRepository.deleteById(list.getId());
     }
 
-    public UserDto saveUser (UserDto user) {
+    public UserDto saveUser (UserSaveDto user) {
         return userMapper.toDto(userRepository.save(userMapper.toEntity(user)));
     }
 
@@ -66,14 +71,20 @@ public class UserService {
     }
 
     public void updatePassword(Long id, String password) {
-        userRepository.findById(id).orElseThrow().setPassword(password);
+        User user = userRepository.findById(id).orElseThrow();
+        user.setPassword(password);
+        userRepository.save(user);
     }
 
     public void updateEmail(Long id, String email) {
-        userRepository.findById(id).orElseThrow().setEmail(email);
+        User user = userRepository.findById(id).orElseThrow();
+        user.setEmail(email);
+        userRepository.save(user);
     }
 
     public void updateName(Long id, String name) {
-        userRepository.findById(id).orElseThrow().setName(name);
+        var u = userRepository.findById(id).orElseThrow();
+        u.setName(name);
+        userRepository.save(u);
     }
 }

@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import java.util.Set;
 
 @Entity
+@Table(name = "Groups")
 @Getter
 @Setter
 public class Group {

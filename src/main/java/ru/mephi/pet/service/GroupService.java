@@ -50,9 +50,11 @@ public class GroupService {
                 .map(taskListMapper::toDto)
                 .collect(Collectors.toSet());
     }
-    
+
     public void updateName(Long id, String name) {
-        groupRepository.findById(id).orElseThrow().setName(name);
+        Group group = groupRepository.findById(id).orElseThrow();
+        group.setName(name);
+        groupRepository.save(group);
     }
 
     /*
@@ -71,18 +73,24 @@ public class GroupService {
         }
     }
 */
-    public void addUser(Long id, UserDto user) {
+    public void addUser(Long id, UserDto userDto) {
         Group group = groupRepository.findById(id).orElseThrow();
-        group.getUsers().add(userMapper.toEntity(user));
-        userRepository.findById(user.getId()).orElseThrow().getGroups().add(group);
-    }
-    
-    public void addList(Long id, TaskListDto list) {
-        groupRepository.findById(id).orElseThrow().getTasks().add(taskListMapper.toEntity(list));
+        group.getUsers().add(userMapper.toEntity(userDto));
+        groupRepository.save(group);
+        User user = userRepository.findById(userDto.getId()).orElseThrow();
+        user.getGroups().add(group);
+        userRepository.save(user);
     }
 
-    public Group saveGroup(Group group) {
-        return groupRepository.save(group);
+    public void addList(Long id, TaskListDto list) {
+        TaskList tasks = taskListRepository.save(taskListMapper.toEntity(list));
+        Group group = groupRepository.findById(id).orElseThrow();
+        group.getTasks().add(tasks);
+        groupRepository.save(group);
+    }
+
+    public GroupDto saveGroup(GroupDto group) {
+        return groupMapper.toDto(groupRepository.save(groupMapper.toEntity(group)));
     }
 
     public void deleteList(Long id, TaskListDto list) {
@@ -92,18 +100,26 @@ public class GroupService {
 
     public void deleteUser(Long id, UserDto userDto) {
         Group group = groupRepository.findById(id).orElseThrow();
-        userRepository.findById(userDto.getId()).orElseThrow().getGroups().remove(group);
-        group.getUsers().remove(userMapper.toEntity(userDto));
+        User user = userRepository.findById(userDto.getId()).orElseThrow();
+        user.getGroups().remove(group);
+        group.getUsers().remove(user);
+        userRepository.save(user);
+        groupRepository.save(group);
     }
 
     public void deleteGroup(Long id) {
+        List<User> toSave = new LinkedList<>();
         Group group = groupRepository.findById(id).orElseThrow();
-        group.getUsers().forEach(u -> u.getGroups().remove(group));
+        group.getUsers().forEach(u -> {
+            u.getGroups().remove(group);
+            toSave.add(u);
+        });
+        userRepository.saveAll(toSave);
         groupRepository.delete(group);
     }
 
     public void deleteAllGroups() {
         groupRepository.deleteAll();
     }
-    
+
 }

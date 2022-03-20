@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -22,5 +23,7 @@ public class TaskList {
     private Set<Record> records;
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Tag> tags = new LinkedHashSet<>();
+    @PastOrPresent
+    @Column(updatable = false)
     private LocalDateTime creatingTime;
 }
