@@ -84,9 +84,11 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void updateName(Long id, String name) {
-        var u = userRepository.findById(id).orElseThrow();
-        u.setName(name);
+    public void updateUser(Long id, UserDto userDto) {
+        User u = userRepository.findById(id).orElseThrow();
+        u.setName(userDto.getName());
+        u.setEmail(userDto.getEmail());
+        u.setLogin(userDto.getLogin());
         userRepository.save(u);
     }
 }

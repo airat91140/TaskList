@@ -12,63 +12,57 @@ import ru.mephi.pet.service.UserService;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/getUsers")
+    @GetMapping("")
     public ResponseEntity<Iterable<UserDto>> getUsers() {
         return ResponseEntity.ok(userService.getUsers());
     }
 
-    @GetMapping("/getUsers{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUser(id));
     }
 
-    @GetMapping("/getLists{id}")
+    @GetMapping("/{id}/lists")
     public ResponseEntity<Iterable<TaskListDto>> getUserLists(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserLists(id));
     }
 
-    @GetMapping("/getGroups{id}")
+    @GetMapping("/{id}/groups")
     public ResponseEntity<Iterable<Group>> getGroups(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getGroups(id));
     }
 
-    @DeleteMapping("/deleteUsers{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/deleteUsers")
-    public ResponseEntity<Void> deleteAllUsers() {
-        userService.deleteAllUsers();
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/deleteList{id}")
+    @DeleteMapping("/{id}/list")
     public ResponseEntity<Void> deleteList(@PathVariable Long id, @RequestBody TaskListDto list){
         userService.deleteList(id, list);
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/saveUser")
+    @PostMapping("")
     public ResponseEntity<UserDto> saveUser(@RequestBody UserSaveDto user) {
         return ResponseEntity.ok(userService.saveUser(user));
     }
 
-    @PostMapping("/addList{id}")
+    @PostMapping("/{id}/list")
     public ResponseEntity<Void> addList(@PathVariable Long id, @RequestBody TaskListDto list) {
         userService.addList(id, list);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/updatePassword{id}")
+    @PutMapping("/{id}/password")
     public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody String password) {
         userService.updatePassword(id, password);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/updateName{id}")
-    public ResponseEntity<Void> updateName(@PathVariable Long id, @RequestBody String name) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateName(@PathVariable Long id, @RequestBody UserDto name) {
         userService.updateName(id, name);
         return ResponseEntity.noContent().build();
     }

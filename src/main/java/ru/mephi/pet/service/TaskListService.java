@@ -51,7 +51,7 @@ public class TaskListService {
                 .collect(Collectors.toList());
     }
 
-    public void addTag(Long id, TagDto tagDto) {
+    public TagDto addTag(Long id, TagDto tagDto) {
         TaskList list = taskListRepository.findById(id).orElseThrow();
         Tag tag = tagRepository.findById(tagDto.getId()).orElse(null);
         if (tag == null)
@@ -61,21 +61,22 @@ public class TaskListService {
             tag.setLists(new LinkedHashSet<>());
         tag.getLists().add(list);
         taskListRepository.save(list);
-        tagRepository.save(tag);
+        return tagMapper.toDto(tag);
     }
 
-    public void addRecord(Long id, RecordDto recordDto) {
+    public RecordDto addRecord(Long id, RecordDto recordDto) {
         TaskList list = taskListRepository.findById(id).orElseThrow();
         Record record = recordRepository.save(recordMapper.toEntity(recordDto));
         list.getRecords().add(record);
         record.setParentList(list);
         taskListRepository.save(list);
         recordRepository.save(record);
+        return recordMapper.toDto(record);
     }
 
-    public void updateHeader(Long id, String header) {
+    public void updateTaskList(Long id, TaskListDto taskListDto) {
         TaskList list = taskListRepository.findById(id).orElseThrow();
-        list.setHeader(header);
+        list.setHeader(taskListDto.getHeader());
         taskListRepository.save(list);
     }
 

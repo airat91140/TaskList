@@ -32,9 +32,11 @@ public class RecordService {
         return taskListMapper.toDto(recordRepository.findById(id).orElseThrow().getParentList());
     }
 
-    public void updateDeadline(Long id, LocalDateTime newTime) {
+    public void updateRecord(Long id, RecordDto recordDto) {
         Record record = recordRepository.findById(id).orElseThrow();
-        record.setDeadLine(newTime);
+        record.setDeadLine(recordDto.getDeadLine());
+        record.setIsDone(recordDto.getIsDone());
+        record.setData(recordDto.getData());
         recordRepository.save(record);
     }
 

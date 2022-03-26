@@ -14,51 +14,49 @@ import ru.mephi.pet.service.TaskListService;
 public class TaskListController {
     private final TaskListService taskListService;
 
-    @GetMapping("/getLists")
+    @GetMapping("")
     public ResponseEntity<Iterable<TaskListDto>> getLists() {
         return ResponseEntity.ok(taskListService.getLists());
     }
 
-    @GetMapping("/getList{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<TaskListDto> getList(@PathVariable Long id) {
         return ResponseEntity.ok(taskListService.getList(id));
     }
 
-    @GetMapping("/getTags{id}")
+    @GetMapping("/{id}/tags")
     public ResponseEntity<Iterable<TagDto>> getTags(@PathVariable Long id) {
         return ResponseEntity.ok(taskListService.getTags(id));
     }
 
-    @GetMapping("/getRecords{id}")
+    @GetMapping("/{id}/records")
     public ResponseEntity<Iterable<RecordDto>> getRecords(@PathVariable Long id) {
         return ResponseEntity.ok(taskListService.getRecords(id));
     }
 
-    @PostMapping("/addTag{id}")
-    public ResponseEntity<Void> addTag(@PathVariable Long id, @RequestBody TagDto tagDto) {
-        taskListService.addTag(id, tagDto);
+    @PostMapping("/{id}")
+    public ResponseEntity<TagDto> addTag(@PathVariable Long id, @RequestBody TagDto tagDto) {
+        return ResponseEntity.ok(taskListService.addTag(id, tagDto));
+    }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<RecordDto> addRecord(@PathVariable Long id, @RequestBody RecordDto recordDto) {
+        return ResponseEntity.ok(taskListService.addRecord(id, recordDto));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateTaskList(@PathVariable Long id, @RequestBody TaskListDto taskListDto) {
+        taskListService.updateTaskList(id, taskListDto);
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/addRecord{id}")
-    public ResponseEntity<Void> addRecord(@PathVariable Long id, @RequestBody RecordDto recordDto) {
-        taskListService.addRecord(id, recordDto);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/updateHeader{id}")
-    public ResponseEntity<Void> updateHeader(@PathVariable Long id, @RequestBody String header) {
-        taskListService.updateHeader(id, header);
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/deleteTag{id}")
+    @DeleteMapping("/{id}/tag")
     public ResponseEntity<Void> deleteTag(@PathVariable Long id, @RequestBody TagDto tagDto) {
         taskListService.deleteTag(id, tagDto);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/deleteRecord{id}")
+    @DeleteMapping("/{id}/record")
     public ResponseEntity<Void> deleteRecord(@PathVariable Long id, @RequestBody RecordDto recordDto) {
         taskListService.deleteRecord(id, recordDto);
         return ResponseEntity.noContent().build();

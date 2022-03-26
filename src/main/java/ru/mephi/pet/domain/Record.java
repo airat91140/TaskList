@@ -2,6 +2,8 @@ package ru.mephi.pet.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -32,6 +34,7 @@ public class Record {
     private String data;
     private Boolean isDone;
     @ManyToOne()
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private TaskList parentList;
     private LocalDateTime deadLine;
 }

@@ -15,36 +15,24 @@ import java.time.LocalDateTime;
 public class RecordController {
     private final RecordService recordService;
 
-    @GetMapping("/getRecords")
+    @GetMapping("")
     ResponseEntity<Iterable<RecordDto>> getRecords() {
         return ResponseEntity.ok(recordService.getRecords());
     }
 
-    @GetMapping("/getRecord{id}")
+    @GetMapping("/{id}")
     ResponseEntity<RecordDto> getRecord(@PathVariable Long id) {
         return ResponseEntity.ok(recordService.getRecord(id));
     }
 
-    @GetMapping("/getList{id}")
+    @GetMapping("/{id}/list")
     ResponseEntity<TaskListDto> getList(@PathVariable Long id) {
         return ResponseEntity.ok(recordService.getList(id));
     }
 
-    @PutMapping("/updateDeadline{id}")
-    ResponseEntity<Void> updateDeadline(@PathVariable Long id, @RequestBody LocalDateTime deadline) {
-        recordService.updateDeadline(id, deadline);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/updateData{id}")
-    ResponseEntity<Void> updateData(@PathVariable Long id, @RequestBody String data) {
-        recordService.updateData(id, data);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/updateIsDone{id}")
-    ResponseEntity<Void> updateIsDone(@PathVariable Long id, @RequestBody Boolean isDone) {
-        recordService.updateIsDone(id, isDone);
+    @PutMapping("/{id}")
+    ResponseEntity<Void> updateDeadline(@PathVariable Long id, @RequestBody RecordDto recordDto) {
+        recordService.updateRecord(id, recordDto);
         return ResponseEntity.noContent().build();
     }
 }

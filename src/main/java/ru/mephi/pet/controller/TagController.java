@@ -13,24 +13,24 @@ import ru.mephi.pet.service.TagService;
 public class TagController {
     private final TagService tagService;
 
-    @GetMapping("/getTags")
+    @GetMapping("")
     public ResponseEntity<Iterable<TagDto>> getTags() {
         return ResponseEntity.ok(tagService.getTags());
     }
 
-    @GetMapping("/getTag{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<TagDto> getTag(@PathVariable Long id) {
         return ResponseEntity.ok(tagService.getTag(id));
     }
 
-    @GetMapping("/getLists{id}")
+    @GetMapping("/{id}/lists")
     public ResponseEntity<Iterable<TaskListDto>> getLists(@PathVariable Long id) {
         return ResponseEntity.ok(tagService.getLists(id));
     }
 
-    @PutMapping("/updateData{id}")
-    public ResponseEntity<Void> updateData(@PathVariable Long id, @RequestBody String data) {
-        tagService.updateData(id, data);
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateTag(@PathVariable Long id, @RequestBody TagDto tagDto) {
+        tagService.updateTag(id, tagDto);
         return ResponseEntity.noContent().build();
     }
 }

@@ -37,9 +37,9 @@ public class TagService {
                 .collect(Collectors.toList());
     }
 
-    public void updateData(Long id, String data) {
+    public void updateTag(Long id, TagDto tagDto) {
         Tag tag = tagRepository.findById(id).orElseThrow();
-        tag.setData(data);
+        tag.setData(tagDto.getData());
         tagRepository.save(tag);
     }
 }

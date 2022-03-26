@@ -51,9 +51,9 @@ public class GroupService {
                 .collect(Collectors.toSet());
     }
 
-    public void updateName(Long id, String name) {
+    public void updateGroup(Long id, GroupDto groupDto) {
         Group group = groupRepository.findById(id).orElseThrow();
-        group.setName(name);
+        group.setName(groupDto.getName());
         groupRepository.save(group);
     }
 
@@ -82,11 +82,12 @@ public class GroupService {
         userRepository.save(user);
     }
 
-    public void addList(Long id, TaskListDto list) {
+    public TaskListDto addList(Long id, TaskListDto list) {
         TaskList tasks = taskListRepository.save(taskListMapper.toEntity(list));
         Group group = groupRepository.findById(id).orElseThrow();
         group.getTasks().add(tasks);
         groupRepository.save(group);
+        return taskListMapper.toDto(tasks);
     }
 
     public GroupDto saveGroup(GroupDto group) {
