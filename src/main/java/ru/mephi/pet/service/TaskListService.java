@@ -7,6 +7,7 @@ import ru.mephi.pet.repository.RecordRepository;
 import ru.mephi.pet.repository.TagRepository;
 import ru.mephi.pet.repository.TaskListRepository;
 
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,6 +57,8 @@ public class TaskListService {
         if (tag == null)
             tag = tagRepository.save(tagMapper.toEntity(tagDto));
         list.getTags().add(tag);
+        if (tag.getLists() == null)
+            tag.setLists(new LinkedHashSet<>());
         tag.getLists().add(list);
         taskListRepository.save(list);
         tagRepository.save(tag);
@@ -85,7 +88,7 @@ public class TaskListService {
         tagRepository.save(tag);
     }
 
-    public void deleteRecord(Long id, RecordDto recordDto) {
+    public void deleteRecord(Long id, RecordDto recordDto) { // todo какой то непонятный exception на 94 строчке
         TaskList list = taskListRepository.findById(id).orElseThrow();
         list.getRecords().remove(recordMapper.toEntity(recordDto));
         recordRepository.deleteById(recordDto.getId());

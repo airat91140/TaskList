@@ -50,7 +50,9 @@ public class UserService {
 
     public void addList(Long id, TaskListDto list) {
         TaskList tasks = taskListRepository.save(taskListMapper.toEntity(list));
-        userRepository.findById(id).orElseThrow().getTasks().add(tasks);
+        User user = userRepository.findById(id).orElseThrow();
+        user.getTasks().add(tasks);
+        userRepository.save(user);
     }
 
     public void deleteList(Long id, TaskListDto list) {
