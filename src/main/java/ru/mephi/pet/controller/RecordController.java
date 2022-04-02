@@ -7,8 +7,6 @@ import ru.mephi.pet.domain.RecordDto;
 import ru.mephi.pet.domain.TaskListDto;
 import ru.mephi.pet.service.RecordService;
 
-import java.time.LocalDateTime;
-
 @RequiredArgsConstructor
 @RequestMapping("/api/record")
 @RestController

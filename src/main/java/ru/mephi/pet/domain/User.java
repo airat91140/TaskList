@@ -11,7 +11,24 @@ import java.util.Set;
 @Getter
 @Setter
 public class User {
-    public User() {}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(unique = true, nullable = false)
+    private String login;
+    private String password;
+    private String email;
+    @Column(nullable = false)
+    private String name;
+    @OneToMany
+    private Set<TaskList> tasks;
+    @ManyToMany
+    private Set<Group> groups;
+    @OneToMany
+    private Set<UserGroupACL> groupACLS;
+
+    public User() {
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -25,18 +42,4 @@ public class User {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    @Column(unique = true, nullable = false)
-    private String login;
-    private String password;
-    private String email;
-    @Column(nullable = false)
-    private String name;
-    @OneToMany
-    private Set<TaskList> tasks;
-    @ManyToMany
-    private Set<Group> groups;
 }

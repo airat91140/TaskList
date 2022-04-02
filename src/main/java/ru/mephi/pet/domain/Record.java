@@ -13,7 +13,18 @@ import java.util.Objects;
 @Getter
 @Setter
 public class Record {
-    public Record() {}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String data;
+    private Boolean isDone;
+    @ManyToOne()
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private TaskList parentList;
+    private LocalDateTime deadLine;
+
+    public Record() {
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -27,14 +38,4 @@ public class Record {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private String data;
-    private Boolean isDone;
-    @ManyToOne()
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private TaskList parentList;
-    private LocalDateTime deadLine;
 }

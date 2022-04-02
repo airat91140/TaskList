@@ -3,7 +3,9 @@ package ru.mephi.pet.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.mephi.pet.domain.*;
+import ru.mephi.pet.domain.GroupDto;
+import ru.mephi.pet.domain.TaskListDto;
+import ru.mephi.pet.domain.UserDto;
 import ru.mephi.pet.service.GroupService;
 
 @RequiredArgsConstructor
@@ -39,7 +41,7 @@ public class GroupController {
     }
 
     @DeleteMapping("/{id}/list")
-    public ResponseEntity<Void> deleteList(@PathVariable Long id, @RequestBody TaskListDto list){
+    public ResponseEntity<Void> deleteList(@PathVariable Long id, @RequestBody TaskListDto list) {
         groupService.deleteList(id, list);
         return ResponseEntity.noContent().build();
     }
@@ -55,12 +57,12 @@ public class GroupController {
         return ResponseEntity.ok(groupService.saveGroup(group));
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/{id}/list")
     public ResponseEntity<TaskListDto> addList(@PathVariable Long id, @RequestBody TaskListDto list) {
         return ResponseEntity.ok(groupService.addList(id, list));
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/{id}/user")
     public ResponseEntity<Void> addUser(@PathVariable Long id, @RequestBody UserDto user) {
         groupService.addUser(id, user);
         return ResponseEntity.noContent().build();

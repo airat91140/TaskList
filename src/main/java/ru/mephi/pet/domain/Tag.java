@@ -11,11 +11,16 @@ import java.util.Set;
 @Getter
 @Setter
 public class Tag {
-    public Tag() {}
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(length = 64)
+    private String data;
+    @ManyToMany()
+    private Set<TaskList> lists;
+
+    public Tag() {
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -29,9 +34,4 @@ public class Tag {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-    @Column(length = 64)
-    private String data;
-    @ManyToMany()
-    private Set<TaskList> lists;
 }

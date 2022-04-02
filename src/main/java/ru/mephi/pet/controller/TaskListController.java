@@ -34,12 +34,12 @@ public class TaskListController {
         return ResponseEntity.ok(taskListService.getRecords(id));
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/{id}/tag")
     public ResponseEntity<TagDto> addTag(@PathVariable Long id, @RequestBody TagDto tagDto) {
         return ResponseEntity.ok(taskListService.addTag(id, tagDto));
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/{id}/record")
     public ResponseEntity<RecordDto> addRecord(@PathVariable Long id, @RequestBody RecordDto recordDto) {
         return ResponseEntity.ok(taskListService.addRecord(id, recordDto));
     }

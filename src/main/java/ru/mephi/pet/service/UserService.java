@@ -60,7 +60,7 @@ public class UserService {
         taskListRepository.deleteById(list.getId());
     }
 
-    public UserDto saveUser (UserSaveDto user) {
+    public UserDto saveUser(UserSaveDto user) {
         return userMapper.toDto(userRepository.save(userMapper.toEntity(user)));
     }
 

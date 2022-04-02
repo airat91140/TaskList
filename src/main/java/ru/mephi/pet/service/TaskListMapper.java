@@ -7,5 +7,6 @@ import ru.mephi.pet.domain.TaskListDto;
 @Mapper(componentModel = "spring")
 public interface TaskListMapper {
     TaskListDto toDto(TaskList taskList);
+
     TaskList toEntity(TaskListDto taskListDto);
 }

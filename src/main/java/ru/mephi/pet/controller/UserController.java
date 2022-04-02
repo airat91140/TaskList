@@ -3,7 +3,10 @@ package ru.mephi.pet.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.mephi.pet.domain.*;
+import ru.mephi.pet.domain.Group;
+import ru.mephi.pet.domain.TaskListDto;
+import ru.mephi.pet.domain.UserDto;
+import ru.mephi.pet.domain.UserSaveDto;
 import ru.mephi.pet.service.UserService;
 
 @RequiredArgsConstructor
@@ -39,7 +42,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}/list")
-    public ResponseEntity<Void> deleteList(@PathVariable Long id, @RequestBody TaskListDto list){
+    public ResponseEntity<Void> deleteList(@PathVariable Long id, @RequestBody TaskListDto list) {
         userService.deleteList(id, list);
         return ResponseEntity.noContent().build();
     }
@@ -63,13 +66,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateName(@PathVariable Long id, @RequestBody UserDto name) {
-        userService.updateName(id, name);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/updateEmail{id}")
-    public ResponseEntity<Void> updateEmail(@PathVariable Long id, @RequestBody String email) {
-        userService.updateEmail(id, email);
+        userService.updateUser(id, name);
         return ResponseEntity.noContent().build();
     }
 }

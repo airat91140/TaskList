@@ -1,7 +1,6 @@
 package ru.mephi.pet.service;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.stereotype.Service;
 import ru.mephi.pet.domain.*;
 import ru.mephi.pet.repository.GroupRepository;

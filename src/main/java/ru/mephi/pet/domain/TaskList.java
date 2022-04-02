@@ -6,7 +6,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -14,12 +13,22 @@ import java.util.Set;
 @Getter
 @Setter
 public class TaskList {
-    public TaskList() {}
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String header;
+    @OneToMany
+    private Set<Record> records;
+    @ManyToMany
+    private Set<Tag> tags;
+    @PastOrPresent
+    @Column(updatable = false)
+    private LocalDateTime creatingTime;
+    @OneToMany
+    private Set<UserGroupACL> users;
+
+    public TaskList() {
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -33,12 +42,4 @@ public class TaskList {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-    @OneToMany
-    private Set<Record> records;
-    @ManyToMany
-    private Set<Tag> tags;
-    @PastOrPresent
-    @Column(updatable = false)
-    private LocalDateTime creatingTime;
 }
