@@ -1,0 +1,48 @@
+    Hibernate: create table groups_tasks (group_id int8 not null, tasks_id int8 not null, primary key (group_id, tasks_id))
+    Hibernate: create table groups_useracls (group_id int8 not null, useracls_id int8 not null, primary key (group_id, useracls_id))
+    Hibernate: create table groups_users (group_id int8 not null, users_id int8 not null, primary key (group_id, users_id))
+    Hibernate: create table record (id  bigserial not null, data varchar(255), dead_line timestamp, is_done boolean, parent_list_id int8, primary key (id))
+    Hibernate: create table tag (id  bigserial not null, data varchar(64), primary key (id))
+    Hibernate: create table tag_lists (tag_id int8 not null, lists_id int8 not null, primary key (tag_id, lists_id))
+    Hibernate: create table task_list (id  bigserial not null, creating_time timestamp, header varchar(255), owner_id int8, primary key (id))
+    Hibernate: create table task_list_records (task_list_id int8 not null, records_id int8 not null, primary key (task_list_id, records_id))
+    Hibernate: create table task_list_tags (task_list_id int8 not null, tags_id int8 not null, primary key (task_list_id, tags_id))
+    Hibernate: create table user (id  bigserial not null, email varchar(255), login varchar(255) not null, name varchar(255) not null, password varchar(255), primary key (id))
+    Hibernate: create table user_groupacls (user_id int8 not null, groupacls_id int8 not null, primary key (user_id, groupacls_id))
+    Hibernate: create table user_groups (user_id int8 not null, groups_id int8 not null, primary key (user_id, groups_id))
+    Hibernate: create table user_tasks (user_id int8 not null, tasks_id int8 not null, primary key (user_id, tasks_id))
+    Hibernate: create table user_groupacl (id  bigserial not null, useracl int4, group_id int8, user_id int8, primary key (id))
+    Hibernate: alter table if exists groups_tasks drop constraint if exists UK_jntty7m82xsa8vrj0mjx69yuj
+    Hibernate: alter table if exists groups_tasks add constraint UK_jntty7m82xsa8vrj0mjx69yuj unique (tasks_id)
+    Hibernate: alter table if exists groups_useracls drop constraint if exists UK_pecevb8ilmhyvwo9qxi03x56x
+    Hibernate: alter table if exists groups_useracls add constraint UK_pecevb8ilmhyvwo9qxi03x56x unique (useracls_id)
+    Hibernate: alter table if exists task_list_records drop constraint if exists UK_i2nrf0sfeaca187l7c4olf8ux
+    Hibernate: alter table if exists task_list_records add constraint UK_i2nrf0sfeaca187l7c4olf8ux unique (records_id)
+    Hibernate: alter table if exists user drop constraint if exists UK_ew1hvam8uwaknuaellwhqchhb
+    Hibernate: alter table if exists user add constraint UK_ew1hvam8uwaknuaellwhqchhb unique (login)
+    Hibernate: alter table if exists user_groupacls drop constraint if exists UK_fjyip4yjfkmj2k3e65udvubi0
+    Hibernate: alter table if exists user_groupacls add constraint UK_fjyip4yjfkmj2k3e65udvubi0 unique (groupacls_id)
+    Hibernate: alter table if exists user_tasks drop constraint if exists UK_7c4k00xtkdl7l1vbcjc4yf29l
+    Hibernate: alter table if exists user_tasks add constraint UK_7c4k00xtkdl7l1vbcjc4yf29l unique (tasks_id)
+    Hibernate: alter table if exists groups_tasks add constraint FKfod0dr4ls8lg8fr5vb3aol1x2 foreign key (tasks_id) references task_list
+    Hibernate: alter table if exists groups_tasks add constraint FKfbi5sq96igykm76wlj6pbtph0 foreign key (group_id) references groups
+    Hibernate: alter table if exists groups_useracls add constraint FK673bxjidyso6k3u9jb07l83u4 foreign key (useracls_id) references user_groupacl
+    Hibernate: alter table if exists groups_useracls add constraint FKb8ain9635pd6o7gqj036io703 foreign key (group_id) references groups
+    Hibernate: alter table if exists groups_users add constraint FK6h0j8sp6vfq264jqmk7cy2mhm foreign key (users_id) references user
+    Hibernate: alter table if exists groups_users add constraint FKakkv3ihrlmgfjf50vj62a0jr6 foreign key (group_id) references groups
+    Hibernate: alter table if exists record add constraint FKf0ilqff1xkpl5ko2agt17po2w foreign key (parent_list_id) references task_list
+    Hibernate: alter table if exists tag_lists add constraint FKbsjxj9lnh7989g3i3kppkvge8 foreign key (lists_id) references task_list
+    Hibernate: alter table if exists tag_lists add constraint FKc7b3k9weirte72axp0gh1b41 foreign key (tag_id) references tag
+    Hibernate: alter table if exists task_list add constraint FK1kdcql54xg23bmbqc23s0bvnp foreign key (owner_id) references groups
+    Hibernate: alter table if exists task_list_records add constraint FKflmlf9md8b6n7e2443ke6majy foreign key (records_id) references record
+    Hibernate: alter table if exists task_list_records add constraint FK56g5p2idodhperxfrpij8y459 foreign key (task_list_id) references task_list
+    Hibernate: alter table if exists task_list_tags add constraint FKgua0jjn5ffbk40g86e965xfa7 foreign key (tags_id) references tag
+    Hibernate: alter table if exists task_list_tags add constraint FKscl2s4u4xaav3n10mqq2meuoh foreign key (task_list_id) references task_list
+    Hibernate: alter table if exists user_groupacls add constraint FKmky3uvtr6hwu4gwbiou502j0r foreign key (groupacls_id) references user_groupacl
+    Hibernate: alter table if exists user_groupacls add constraint FK3a2jd061xpgl90i1ymhaxdaq3 foreign key (user_id) references user
+    Hibernate: alter table if exists user_groups add constraint FKp2p74bdhj5bso5tr0smnjlbhn foreign key (groups_id) references groups
+    Hibernate: alter table if exists user_groups add constraint FKxgk67l5yp8458l39rog6nppe foreign key (user_id) references user
+    Hibernate: alter table if exists user_tasks add constraint FKfm40hr32ltf1m1ot2wvtfb1yr foreign key (tasks_id) references task_list
+    Hibernate: alter table if exists user_tasks add constraint FK6kovin1hf8cbtxg2lealptr6m foreign key (user_id) references user
+    Hibernate: alter table if exists user_groupacl add constraint FKdc775ogrha9gb4kttcikdlvq9 foreign key (group_id) references groups
+    Hibernate: alter table if exists user_groupacl add constraint FKaly5r1ur3an1vn6ayvp1h9a7p foreign key (user_id) references user

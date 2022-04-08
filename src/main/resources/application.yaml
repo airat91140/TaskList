@@ -1,14 +1,17 @@
 spring:
   datasource:
     driverClassName: org.h2.Driver
-    url: jdbc:h2:mem:mydb;MODE=PostgreSQL
+    #url: jdbc:h2:mem:mydb;MODE=PostgreSQL
+    url: jdbc:h2:file:d:/tmp/data/demo;MODE=PostgreSQL;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
     username: admin
     password: klk011101
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL95Dialect
-    generate-ddl: true
+    generate-ddl: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
   h2:
     console.enabled: true
+  liquibase:
+    change-log: db/changelog/db.changelog-master.xml

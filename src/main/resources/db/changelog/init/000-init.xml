@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd
+      http://www.liquibase.org/xml/ns/pro
+      http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd">
+    <changeSet id="1646647681323-1" author="Airat">
+        <createTable tableName="groups">
+            <column name="id" type="bigserial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1646647681323-2" author="Airat">
+        <createTable tableName="groups_tasks">
+            <column name="group_id" type="int8">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="tasks_id" type="int8">
+                <constraints nullable="false" primaryKey="true" unique="true" uniqueConstraintName="UK_jntty7m82xsa8vrj0mjx69yuj"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1646647681323-3" author="Airat">
+        <createTable tableName="groups_useracls">
+            <column name="group_id" type="int8">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="useracls_id" type="int8">
+                <constraints nullable="false" primaryKey="true" unique="true" uniqueConstraintName="UK_pecevb8ilmhyvwo9qxi03x56x"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1646647681323-4" author="Airat">
+        <createTable tableName="groups_users">
+            <column name="group_id" type="int8">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="users_id" type="int8">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1646647681323-5" author="Airat">
+        <createTable tableName="record">
+            <column name="id" type="bigserial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="data" type="varchar(255)"/>
+            <column name="dead_line" type="timestamp"/>
+            <column name="is_done" type="boolean"/>
+            <column name="parent_list_id" type="int8"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1646647681323-6" author="Airat">
+        <createTable tableName="tag">
+            <column name="id" type="bigserial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="data" type="varchar(64)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1646647681323-7" author="Airat">
+        <createTable tableName="tag_lists">
+            <column name="tag_id" type="int8">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="lists_id" type="int8">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1646647681323-8" author="Airat">
+        <createTable tableName="task_list">
+            <column name="id" type="bigserial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="creating_time" type="timestamp"/>
+            <column name="header" type="varchar(255)"/>
+            <column name="owner_id" type="int8"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1646647681323-9" author="Airat">
+        <createTable tableName="task_list_records">
+            <column name="records_id" type="int8">
+                <constraints nullable="false" primaryKey="true" unique="true" uniqueConstraintName="UK_i2nrf0sfeaca187l7c4olf8ux"/>
+            </column>
+            <column name="task_list_id" type="int8">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1646647681323-10" author="Airat">
+        <createTable tableName="task_list_tags">
+            <column name="task_list_id" type="int8">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="tags_id" type="int8">
+                <constraints nullable="false" primaryKey="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1646647681323-11" author="Airat">
+        <createTable tableName="user">
+            <column name="id" type="bigserial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="login" type="varchar(255)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="UK_ew1hvam8uwaknuaellwhqchhb"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1646647681323-12" author="Airat">
+        <createTable tableName="user_groupacls">
+            <column name="user_id" type="int8">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="groupacls_id" type="int8">
+                <constraints nullable="false" primaryKey="true" unique="true" uniqueConstraintName="UK_fjyip4yjfkmj2k3e65udvubi0"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1646647681323-13" author="Airat">
+        <createTable tableName="user_groups">
+            <column name="user_id" type="int8">
+            <constraints nullable="false" primaryKey="true"/>
+        </column>
+            <column name="groups_id" type="int8">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1646647681323-14" author="Airat">
+        <createTable tableName="user_tasks">
+            <column name="user_id" type="int8">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="tasks_id" type="int8">
+                <constraints nullable="false" primaryKey="true" unique="true" uniqueConstraintName="UK_7c4k00xtkdl7l1vbcjc4yf29l"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1646647681323-15" author="Airat">
+        <createTable tableName="user_groupacl">
+            <column name="id" type="bigserial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="useracl" type="int4"/>
+            <column name="group_id" type="int8"/>
+            <column name="user_id" type="int8"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1646647681323-16" author="Airat">
+        <addForeignKeyConstraint baseTableName="groups_tasks" baseColumnNames="tasks_id"
+                                 constraintName="FKfod0dr4ls8lg8fr5vb3aol1x2"
+                                 referencedTableName="task_list"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="1646647681323-17" author="Airat">
+        <addForeignKeyConstraint baseTableName="groups_tasks" baseColumnNames="group_id"
+                                 constraintName="FKfbi5sq96igykm76wlj6pbtph0"
+                                 referencedTableName="groups"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="1646647681323-18" author="Airat">
+        <addForeignKeyConstraint baseTableName="groups_useracls" baseColumnNames="useracls_id"
+                                 constraintName="FK673bxjidyso6k3u9jb07l83u4"
+                                 referencedTableName="user_groupacl"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="1646647681323-19" author="Airat">
+        <addForeignKeyConstraint baseTableName="groups_useracls" baseColumnNames="group_id"
+                                 constraintName="FKb8ain9635pd6o7gqj036io703"
+                                 referencedTableName="groups"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="1646647681323-20" author="Airat">
+        <addForeignKeyConstraint baseTableName="groups_users" baseColumnNames="users_id"
+                                 constraintName="FK6h0j8sp6vfq264jqmk7cy2mhm"
+                                 referencedTableName="user"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="1646647681323-21" author="Airat">
+        <addForeignKeyConstraint baseTableName="groups_users" baseColumnNames="group_id"
+                                 constraintName="FKakkv3ihrlmgfjf50vj62a0jr6"
+                                 referencedTableName="groups"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="1646647681323-22" author="Airat">
+        <addForeignKeyConstraint baseTableName="record" baseColumnNames="parent_list_id"
+                                 constraintName="FKf0ilqff1xkpl5ko2agt17po2w"
+                                 referencedTableName="task_list"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="1646647681323-23" author="Airat">
+        <addForeignKeyConstraint baseTableName="tag_lists" baseColumnNames="lists_id"
+                                 constraintName="FKbsjxj9lnh7989g3i3kppkvge8"
+                                 referencedTableName="task_list"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="1646647681323-24" author="Airat">
+        <addForeignKeyConstraint baseTableName="tag_lists" baseColumnNames="tag_id"
+                                 constraintName="FKc7b3k9weirte72axp0gh1b41"
+                                 referencedTableName="tag"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="1646647681323-25" author="Airat">
+        <addForeignKeyConstraint baseTableName="tag_lists" baseColumnNames="lists_id"
+                                 constraintName="FK1kdcql54xg23bmbqc23s0bvnp"
+                                 referencedTableName="task_list"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="1646647681323-26" author="Airat">
+        <addForeignKeyConstraint baseTableName="task_list_records" baseColumnNames="records_id"
+                                 constraintName="FKflmlf9md8b6n7e2443ke6majy"
+                                 referencedTableName="record"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="1646647681323-27" author="Airat">
+        <addForeignKeyConstraint baseTableName="task_list_records" baseColumnNames="task_list_id"
+                                 constraintName="FK56g5p2idodhperxfrpij8y459"
+                                 referencedTableName="task_list"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="1646647681323-28" author="Airat">
+        <addForeignKeyConstraint baseTableName="task_list_tags" baseColumnNames="tags_id"
+                                 constraintName="FKgua0jjn5ffbk40g86e965xfa7"
+                                 referencedTableName="tag"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="1646647681323-29" author="Airat">
+        <addForeignKeyConstraint baseTableName="task_list_tags" baseColumnNames="task_list_id"
+                                 constraintName="FKscl2s4u4xaav3n10mqq2meuoh"
+                                 referencedTableName="task_list"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="1646647681323-30" author="Airat">
+        <addForeignKeyConstraint baseTableName="user_groupacls" baseColumnNames="groupacls_id"
+                                 constraintName="FKmky3uvtr6hwu4gwbiou502j0r"
+                                 referencedTableName="user_groupacl"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="1646647681323-31" author="Airat">
+        <addForeignKeyConstraint baseTableName="user_groupacls" baseColumnNames="user_id"
+                                 constraintName="FK3a2jd061xpgl90i1ymhaxdaq3"
+                                 referencedTableName="user"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="1646647681323-32" author="Airat">
+        <addForeignKeyConstraint baseTableName="user_groups" baseColumnNames="groups_id"
+                                 constraintName="FKp2p74bdhj5bso5tr0smnjlbhn"
+                                 referencedTableName="groups"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="1646647681323-33" author="Airat">
+        <addForeignKeyConstraint baseTableName="user_groups" baseColumnNames="user_id"
+                                 constraintName="FKxgk67l5yp8458l39rog6nppe"
+                                 referencedTableName="user"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="1646647681323-34" author="Airat">
+        <addForeignKeyConstraint baseTableName="user_tasks" baseColumnNames="tasks_id"
+                                 constraintName="FKfm40hr32ltf1m1ot2wvtfb1yr"
+                                 referencedTableName="task_list"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="1646647681323-35" author="Airat">
+        <addForeignKeyConstraint baseTableName="user_tasks" baseColumnNames="user_id"
+                                 constraintName="FK6kovin1hf8cbtxg2lealptr6m"
+                                 referencedTableName="user"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="1646647681323-36" author="Airat">
+        <addForeignKeyConstraint baseTableName="user_groupacl" baseColumnNames="group_id"
+                                 constraintName="FKdc775ogrha9gb4kttcikdlvq9"
+                                 referencedTableName="groups"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="1646647681323-37" author="Airat">
+        <addForeignKeyConstraint baseTableName="user_groupacl" baseColumnNames="user_id"
+                                 constraintName="FKaly5r1ur3an1vn6ayvp1h9a7p"
+                                 referencedTableName="user"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>
