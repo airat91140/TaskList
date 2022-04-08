@@ -3,6 +3,8 @@ package ru.mephi.pet.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.mephi.pet.domain.*;
+import ru.mephi.pet.enums.UserACL;
+import ru.mephi.pet.exception.NotOwnedByGroupException;
 import ru.mephi.pet.repository.RecordRepository;
 import ru.mephi.pet.repository.TagRepository;
 import ru.mephi.pet.repository.TaskListRepository;
@@ -53,9 +55,7 @@ public class TaskListService {
 
     public TagDto addTag(Long id, TagDto tagDto) {
         TaskList list = taskListRepository.findById(id).orElseThrow();
-        Tag tag = tagRepository.findById(tagDto.getId()).orElse(null);
-        if (tag == null)
-            tag = tagRepository.save(tagMapper.toEntity(tagDto));
+        Tag tag = tagRepository.findById(tagDto.getId()).orElse(tagRepository.save(tagMapper.toEntity(tagDto)));
         list.getTags().add(tag);
         if (tag.getLists() == null)
             tag.setLists(new LinkedHashSet<>());
@@ -70,7 +70,6 @@ public class TaskListService {
         list.getRecords().add(record);
         record.setParentList(list);
         taskListRepository.save(list);
-        recordRepository.save(record);
         return recordMapper.toDto(record);
     }
 
@@ -83,16 +82,31 @@ public class TaskListService {
     public void deleteTag(Long id, TagDto tagDto) {
         TaskList list = taskListRepository.findById(id).orElseThrow();
         list.getTags().remove(tagMapper.toEntity(tagDto));
-        Tag tag = tagRepository.findById(tagDto.getId()).orElseThrow();
-        tag.getLists().remove(list);
+        tagRepository.findById(tagDto.getId()).orElseThrow().getLists().remove(list);
         taskListRepository.save(list);
-        tagRepository.save(tag);
     }
 
-    public void deleteRecord(Long id, RecordDto recordDto) { // todo какой то непонятный exception на 94 строчке
+    public void deleteRecord(Long id, RecordDto recordDto) {
         TaskList list = taskListRepository.findById(id).orElseThrow();
         list.getRecords().remove(recordMapper.toEntity(recordDto));
         recordRepository.deleteById(recordDto.getId());
-        taskListRepository.save(list);
+    }
+
+    private boolean canRead(TaskList taskList, User user) {
+        if (taskList.getOwner() == null)
+            throw new NotOwnedByGroupException();
+        return taskList.getOwner().getUserACLS().stream().anyMatch(a -> a.getUser().equals(user));
+    }
+
+    private boolean canWrite(TaskList taskList, User user) {
+        if (taskList.getOwner() == null)
+            throw new NotOwnedByGroupException();
+        return taskList.getOwner().getUserACLS().stream().anyMatch(a -> a.getUser().equals(user) && !a.getUserACL().equals(UserACL.READER));
+    }
+
+    private boolean isAdmin(TaskList taskList, User user) {
+        if (taskList.getOwner() == null)
+            throw new NotOwnedByGroupException();
+        return taskList.getOwner().getUserACLS().stream().anyMatch(a -> a.getUser().equals(user) && a.getUserACL().equals(UserACL.ADMIN));
     }
 }

@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.mephi.pet.domain.GroupDto;
 import ru.mephi.pet.domain.TaskListDto;
 import ru.mephi.pet.domain.UserDto;
+import ru.mephi.pet.domain.UserGroupACLDto;
+import ru.mephi.pet.enums.UserACL;
 import ru.mephi.pet.service.GroupService;
 
 @RequiredArgsConstructor
@@ -30,7 +32,7 @@ public class GroupController {
     }
 
     @GetMapping("/{id}/users")
-    public ResponseEntity<Iterable<UserDto>> getUsers(@PathVariable Long id) {
+    public ResponseEntity<Iterable<UserGroupACLDto>> getUsers(@PathVariable Long id) {
         return ResponseEntity.ok(groupService.getUsers(id));
     }
 
@@ -71,6 +73,12 @@ public class GroupController {
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateGroup(@PathVariable Long id, @RequestBody GroupDto group) {
         groupService.updateGroup(id, group);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/ACL")
+    public ResponseEntity<Void> updateACL(@PathVariable Long id, @RequestBody UserDto userDto, @RequestBody UserACL userACL) {
+        groupService.updateACL(id, userDto, userACL);
         return ResponseEntity.noContent().build();
     }
 }

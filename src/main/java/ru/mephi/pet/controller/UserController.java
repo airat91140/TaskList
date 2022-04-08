@@ -3,10 +3,7 @@ package ru.mephi.pet.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.mephi.pet.domain.Group;
-import ru.mephi.pet.domain.TaskListDto;
-import ru.mephi.pet.domain.UserDto;
-import ru.mephi.pet.domain.UserSaveDto;
+import ru.mephi.pet.domain.*;
 import ru.mephi.pet.service.UserService;
 
 @RequiredArgsConstructor
@@ -31,7 +28,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/groups")
-    public ResponseEntity<Iterable<Group>> getGroups(@PathVariable Long id) {
+    public ResponseEntity<Iterable<GroupDto>> getGroups(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getGroups(id));
     }
 
@@ -53,9 +50,13 @@ public class UserController {
     }
 
     @PostMapping("/{id}/list")
-    public ResponseEntity<Void> addList(@PathVariable Long id, @RequestBody TaskListDto list) {
-        userService.addList(id, list);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<TaskListDto> addList(@PathVariable Long id, @RequestBody TaskListDto list) {
+        return ResponseEntity.ok(userService.addList(id, list));
+    }
+
+    @PostMapping("/{id}/group")
+    public ResponseEntity<GroupDto> addGroup(@PathVariable Long id, @RequestBody GroupDto groupDto) {
+        return ResponseEntity.ok(userService.addGroup(id, groupDto));
     }
 
     @PutMapping("/{id}/password")
@@ -65,8 +66,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateName(@PathVariable Long id, @RequestBody UserDto name) {
-        userService.updateUser(id, name);
+    public ResponseEntity<Void> updateUser(@PathVariable Long id, @RequestBody UserDto user) {
+        userService.updateUser(id, user);
         return ResponseEntity.noContent().build();
     }
 }

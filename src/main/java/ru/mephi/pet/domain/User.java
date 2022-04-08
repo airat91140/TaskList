@@ -2,6 +2,8 @@ package ru.mephi.pet.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -20,12 +22,13 @@ public class User {
     private String email;
     @Column(nullable = false)
     private String name;
-    @OneToMany
-    private Set<TaskList> tasks;
+    @OneToMany(cascade = {javax.persistence.CascadeType.ALL})
+    private Set<TaskList> tasks = new java.util.LinkedHashSet<>();
     @ManyToMany
+    @Cascade({CascadeType.SAVE_UPDATE})
     private Set<Group> groups;
-    @OneToMany
-    private Set<UserGroupACL> groupACLS;
+    @OneToMany(cascade = {javax.persistence.CascadeType.ALL})
+    private Set<UserGroupACL> groupACLS = new java.util.LinkedHashSet<>();
 
     public User() {
     }

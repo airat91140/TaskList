@@ -18,8 +18,7 @@ public class Record {
     private Long id;
     private String data;
     private Boolean isDone;
-    @ManyToOne()
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne
     private TaskList parentList;
     private LocalDateTime deadLine;
 

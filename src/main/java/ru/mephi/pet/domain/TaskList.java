@@ -2,6 +2,9 @@ package ru.mephi.pet.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.PastOrPresent;
@@ -18,14 +21,17 @@ public class TaskList {
     private Long id;
     private String header;
     @OneToMany
+    @Cascade({org.hibernate.annotations.CascadeType.ALL})
     private Set<Record> records;
     @ManyToMany
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
     private Set<Tag> tags;
     @PastOrPresent
     @Column(updatable = false)
     private LocalDateTime creatingTime;
-    @OneToMany
-    private Set<UserGroupACL> users;
+    @ManyToOne
+    @JoinColumn
+    private Group owner;
 
     public TaskList() {
     }

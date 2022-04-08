@@ -2,6 +2,8 @@ package ru.mephi.pet.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -17,6 +19,7 @@ public class Tag {
     @Column(length = 64)
     private String data;
     @ManyToMany()
+    @Cascade({CascadeType.SAVE_UPDATE})
     private Set<TaskList> lists;
 
     public Tag() {
