@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.mephi.pet.domain.*;
 import ru.mephi.pet.enums.UserACL;
+import ru.mephi.pet.exception.NoACLException;
+import ru.mephi.pet.exception.NotFoundException;
 import ru.mephi.pet.repository.GroupRepository;
 import ru.mephi.pet.repository.TaskListRepository;
 import ru.mephi.pet.repository.UserGroupACLRepository;
@@ -37,7 +39,7 @@ public class GroupService {
 
     public Iterable<UserGroupACLDto> getUsers(Long id) {
         return groupRepository.findById(id)
-                .orElseThrow()
+                .orElseThrow(NotFoundException::new)
                 .getUserACLS()
                 .stream()
                 .map(userMapper::userGroupACLToUserGroupACLDto)
@@ -46,7 +48,7 @@ public class GroupService {
 
     public Iterable<TaskListDto> getLists(Long id) {
         return groupRepository.findById(id)
-                .orElseThrow()
+                .orElseThrow(NotFoundException::new)
                 .getTasks()
                 .stream()
                 .map(taskListMapper::toDto)
@@ -60,23 +62,23 @@ public class GroupService {
     }
 
     public void updateACL(Long id, UserDto userDto, UserACL acl) {
-        Group group = groupRepository.findById(id).orElseThrow();
+        Group group = groupRepository.findById(id).orElseThrow(NotFoundException::new);
         User user = userMapper.toEntity(userDto);
         UserGroupACL participant = group
                 .getUserACLS()
                 .stream()
                 .filter(r -> r.getUser().equals(user))
                 .findAny()
-                .orElseThrow();
+                .orElseThrow(NoACLException::new);
         if (participant.getUserACL().equals(UserACL.ADMIN))
             throw new RuntimeException("");
         participant.setUserACL(acl);
     }
 
     public void addUser(Long id, UserDto userDto) {
-        Group group = groupRepository.findById(id).orElseThrow();
+        Group group = groupRepository.findById(id).orElseThrow(NotFoundException::new);
         group.getUsers().add(userMapper.toEntity(userDto));
-        User user = userRepository.findById(userDto.getId()).orElseThrow();
+        User user = userRepository.findById(userDto.getId()).orElseThrow(NotFoundException::new);
         user.getGroups().add(group);
         UserGroupACL userGroupACL = userGroupACLRepository.save(new UserGroupACL());
         userGroupACL.setGroup(group);
@@ -88,7 +90,7 @@ public class GroupService {
     }
 
     public TaskListDto addList(Long id, TaskListDto list) {
-        Group group = groupRepository.findById(id).orElseThrow();
+        Group group = groupRepository.findById(id).orElseThrow(NotFoundException::new);
         TaskList tasks = taskListMapper.toEntity(list);
         tasks.setOwner(group);
         group.getTasks().add(tasks);

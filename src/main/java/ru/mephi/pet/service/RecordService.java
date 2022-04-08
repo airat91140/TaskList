@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.mephi.pet.domain.Record;
 import ru.mephi.pet.domain.RecordDto;
 import ru.mephi.pet.domain.TaskListDto;
+import ru.mephi.pet.exception.NotFoundException;
 import ru.mephi.pet.repository.RecordRepository;
 
 import java.util.LinkedList;
@@ -24,30 +25,18 @@ public class RecordService {
     }
 
     public RecordDto getRecord(Long id) {
-        return recordMapper.toDto(recordRepository.findById(id).orElseThrow());
+        return recordMapper.toDto(recordRepository.findById(id).orElseThrow(NotFoundException::new));
     }
 
     public TaskListDto getList(Long id) {
-        return taskListMapper.toDto(recordRepository.findById(id).orElseThrow().getParentList());
+        return taskListMapper.toDto(recordRepository.findById(id).orElseThrow(NotFoundException::new).getParentList());
     }
 
     public void updateRecord(Long id, RecordDto recordDto) {
-        Record record = recordRepository.findById(id).orElseThrow();
+        Record record = recordRepository.findById(id).orElseThrow(NotFoundException::new);
         record.setDeadLine(recordDto.getDeadLine());
         record.setIsDone(recordDto.getIsDone());
         record.setData(recordDto.getData());
-        recordRepository.save(record);
-    }
-
-    public void updateData(Long id, String data) {
-        Record record = recordRepository.findById(id).orElseThrow();
-        record.setData(data);
-        recordRepository.save(record);
-    }
-
-    public void updateIsDone(Long id, Boolean isDone) {
-        Record record = recordRepository.findById(id).orElseThrow();
-        record.setIsDone(isDone);
         recordRepository.save(record);
     }
 }

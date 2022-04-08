@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.mephi.pet.domain.*;
 import ru.mephi.pet.enums.UserACL;
+import ru.mephi.pet.exception.NotFoundException;
 import ru.mephi.pet.repository.GroupRepository;
 import ru.mephi.pet.repository.TaskListRepository;
 import ru.mephi.pet.repository.UserGroupACLRepository;
 import ru.mephi.pet.repository.UserRepository;
 
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,12 +33,12 @@ public class UserService {
     }
 
     public UserDto getUser(Long id) {
-        return userMapper.toDto(userRepository.findById(id).orElseThrow());
+        return userMapper.toDto(userRepository.findById(id).orElseThrow(NotFoundException::new));
     }
 
     public Iterable<TaskListDto> getUserLists(Long id) {
         return userRepository.findById(id)
-                .orElseThrow()
+                .orElseThrow(NotFoundException::new)
                 .getTasks()
                 .stream()
                 .map(taskListMapper::toDto)
@@ -47,7 +47,7 @@ public class UserService {
 
     public Iterable<GroupDto> getGroups(Long id) {
         return userRepository.findById(id)
-                .orElseThrow()
+                .orElseThrow(NotFoundException::new)
                 .getGroups()
                 .stream()
                 .map(groupMapper::toDto)
@@ -71,7 +71,7 @@ public class UserService {
     }
 
     public GroupDto addGroup(Long id, GroupDto groupDto) {
-        User user = userRepository.findById(id).orElseThrow();
+        User user = userRepository.findById(id).orElseThrow(NotFoundException::new);
         Group group = groupRepository.save(groupMapper.toEntity(groupDto));
         group.getUsers().add(user);
         user.getGroups().add(group);
@@ -86,7 +86,7 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
-        User user = userRepository.findById(id).orElseThrow();
+        User user = userRepository.findById(id).orElseThrow(NotFoundException::new);
         user.getGroups().forEach(g -> {
             g.getUsers().remove(user);
             g.getUserACLS().removeIf(a -> a.getUser().equals(user));
@@ -95,13 +95,13 @@ public class UserService {
     }
 
     public void updatePassword(Long id, String password) {
-        User user = userRepository.findById(id).orElseThrow();
+        User user = userRepository.findById(id).orElseThrow(NotFoundException::new);
         user.setPassword(password);
         userRepository.save(user);
     }
 
     public void updateUser(Long id, UserDto userDto) {
-        User u = userRepository.findById(id).orElseThrow();
+        User u = userRepository.findById(id).orElseThrow(NotFoundException::new);
         u.setName(userDto.getName());
         u.setEmail(userDto.getEmail());
         u.setLogin(userDto.getLogin());

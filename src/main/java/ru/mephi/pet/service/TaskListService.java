@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.mephi.pet.domain.*;
 import ru.mephi.pet.enums.UserACL;
+import ru.mephi.pet.exception.NotFoundException;
 import ru.mephi.pet.exception.NotOwnedByGroupException;
 import ru.mephi.pet.repository.RecordRepository;
 import ru.mephi.pet.repository.TagRepository;
@@ -32,12 +33,12 @@ public class TaskListService {
     }
 
     public TaskListDto getList(Long id) {
-        return taskListMapper.toDto(taskListRepository.findById(id).orElseThrow());
+        return taskListMapper.toDto(taskListRepository.findById(id).orElseThrow(NotFoundException::new));
     }
 
     public Iterable<TagDto> getTags(Long id) {
         return taskListRepository.findById(id)
-                .orElseThrow()
+                .orElseThrow(NotFoundException::new)
                 .getTags()
                 .stream()
                 .map(tagMapper::toDto)
@@ -46,7 +47,7 @@ public class TaskListService {
 
     public Iterable<RecordDto> getRecords(Long id) {
         return taskListRepository.findById(id)
-                .orElseThrow()
+                .orElseThrow(NotFoundException::new)
                 .getRecords()
                 .stream()
                 .map(recordMapper::toDto)
@@ -54,7 +55,7 @@ public class TaskListService {
     }
 
     public TagDto addTag(Long id, TagDto tagDto) {
-        TaskList list = taskListRepository.findById(id).orElseThrow();
+        TaskList list = taskListRepository.findById(id).orElseThrow(NotFoundException::new);
         Tag tag = tagRepository.findById(tagDto.getId()).orElse(tagRepository.save(tagMapper.toEntity(tagDto)));
         list.getTags().add(tag);
         if (tag.getLists() == null)
@@ -65,7 +66,7 @@ public class TaskListService {
     }
 
     public RecordDto addRecord(Long id, RecordDto recordDto) {
-        TaskList list = taskListRepository.findById(id).orElseThrow();
+        TaskList list = taskListRepository.findById(id).orElseThrow(NotFoundException::new);
         Record record = recordRepository.save(recordMapper.toEntity(recordDto));
         list.getRecords().add(record);
         record.setParentList(list);
@@ -74,20 +75,20 @@ public class TaskListService {
     }
 
     public void updateTaskList(Long id, TaskListDto taskListDto) {
-        TaskList list = taskListRepository.findById(id).orElseThrow();
+        TaskList list = taskListRepository.findById(id).orElseThrow(NotFoundException::new);
         list.setHeader(taskListDto.getHeader());
         taskListRepository.save(list);
     }
 
     public void deleteTag(Long id, TagDto tagDto) {
-        TaskList list = taskListRepository.findById(id).orElseThrow();
+        TaskList list = taskListRepository.findById(id).orElseThrow(NotFoundException::new);
         list.getTags().remove(tagMapper.toEntity(tagDto));
-        tagRepository.findById(tagDto.getId()).orElseThrow().getLists().remove(list);
+        tagRepository.findById(tagDto.getId()).orElseThrow(NotFoundException::new).getLists().remove(list);
         taskListRepository.save(list);
     }
 
     public void deleteRecord(Long id, RecordDto recordDto) {
-        TaskList list = taskListRepository.findById(id).orElseThrow();
+        TaskList list = taskListRepository.findById(id).orElseThrow(NotFoundException::new);
         list.getRecords().remove(recordMapper.toEntity(recordDto));
         recordRepository.deleteById(recordDto.getId());
     }

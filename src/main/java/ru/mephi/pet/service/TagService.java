@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.mephi.pet.domain.Tag;
 import ru.mephi.pet.domain.TagDto;
 import ru.mephi.pet.domain.TaskListDto;
+import ru.mephi.pet.exception.NotFoundException;
 import ru.mephi.pet.repository.TagRepository;
 
 import java.util.LinkedList;
@@ -25,12 +26,12 @@ public class TagService {
     }
 
     public TagDto getTag(Long id) {
-        return tagMapper.toDto(tagRepository.findById(id).orElseThrow());
+        return tagMapper.toDto(tagRepository.findById(id).orElseThrow(NotFoundException::new));
     }
 
     public Iterable<TaskListDto> getLists(Long id) {
         return tagRepository.findById(id)
-                .orElseThrow()
+                .orElseThrow(NotFoundException::new)
                 .getLists()
                 .stream()
                 .map(taskListMapper::toDto)
@@ -38,7 +39,7 @@ public class TagService {
     }
 
     public void updateTag(Long id, TagDto tagDto) {
-        Tag tag = tagRepository.findById(id).orElseThrow();
+        Tag tag = tagRepository.findById(id).orElseThrow(NotFoundException::new);
         tag.setData(tagDto.getData());
         tagRepository.save(tag);
     }
