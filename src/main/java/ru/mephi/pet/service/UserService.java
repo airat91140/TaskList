@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.mephi.pet.domain.*;
 import ru.mephi.pet.enums.UserACL;
+import ru.mephi.pet.exception.ForbiddenOperationException;
 import ru.mephi.pet.exception.NotFoundException;
 import ru.mephi.pet.repository.GroupRepository;
 import ru.mephi.pet.repository.TaskListRepository;
@@ -32,12 +33,12 @@ public class UserService {
         return result;
     }
 
-    public UserDto getUser(Long id) {
-        return userMapper.toDto(userRepository.findById(id).orElseThrow(NotFoundException::new));
+    public UserDto getUser(String login) {
+        return userMapper.toDto(userRepository.findByLogin(login).orElseThrow(NotFoundException::new));
     }
 
-    public Iterable<TaskListDto> getUserLists(Long id) {
-        return userRepository.findById(id)
+    public Iterable<TaskListDto> getUserLists(String login) {
+        return userRepository.findByLogin(login)
                 .orElseThrow(NotFoundException::new)
                 .getTasks()
                 .stream()
@@ -45,8 +46,8 @@ public class UserService {
                 .collect(Collectors.toSet());
     }
 
-    public Iterable<GroupDto> getGroups(Long id) {
-        return userRepository.findById(id)
+    public Iterable<GroupDto> getGroups(String login) {
+        return userRepository.findByLogin(login)
                 .orElseThrow(NotFoundException::new)
                 .getGroups()
                 .stream()
@@ -54,24 +55,26 @@ public class UserService {
                 .collect(Collectors.toSet());
     }
 
-    public TaskListDto addList(Long id, TaskListDto list) {
+    public TaskListDto addList(String login, TaskListDto list) {
         TaskList tasks = taskListRepository.save(taskListMapper.toEntity(list));
-        User user = userRepository.findById(id).orElseThrow();
+        User user = userRepository.findByLogin(login).orElseThrow();
         user.getTasks().add(tasks);
         userRepository.save(user);
         return taskListMapper.toDto(tasks);
     }
 
-    public void deleteList(Long id, TaskListDto list) {
-        taskListRepository.deleteById(list.getId());
+    public void deleteList(String login, TaskListDto list) {
+        if (TaskListService.canWrite(taskListMapper.toEntity(list), userRepository.findByLogin(login).orElseThrow(NotFoundException::new)))
+            taskListRepository.deleteById(list.getId());
+        else throw new ForbiddenOperationException();
     }
 
     public UserDto saveUser(UserSaveDto user) {
         return userMapper.toDto(userRepository.save(userMapper.toEntity(user)));
     }
 
-    public GroupDto addGroup(Long id, GroupDto groupDto) {
-        User user = userRepository.findById(id).orElseThrow(NotFoundException::new);
+    public GroupDto addGroup(String login, GroupDto groupDto) {
+        User user = userRepository.findByLogin(login).orElseThrow(NotFoundException::new);
         Group group = groupRepository.save(groupMapper.toEntity(groupDto));
         group.getUsers().add(user);
         user.getGroups().add(group);
@@ -85,23 +88,23 @@ public class UserService {
         return groupMapper.toDto(group);
     }
 
-    public void deleteUser(Long id) {
-        User user = userRepository.findById(id).orElseThrow(NotFoundException::new);
+    public void deleteUser(String login) {
+        User user = userRepository.findByLogin(login).orElseThrow(NotFoundException::new);
         user.getGroups().forEach(g -> {
             g.getUsers().remove(user);
             g.getUserACLS().removeIf(a -> a.getUser().equals(user));
         });
-        userRepository.deleteById(id);
+        userRepository.delete(user);
     }
 
-    public void updatePassword(Long id, String password) {
-        User user = userRepository.findById(id).orElseThrow(NotFoundException::new);
+    public void updatePassword(String login, String password) {
+        User user = userRepository.findByLogin(login).orElseThrow(NotFoundException::new);
         user.setPassword(password);
         userRepository.save(user);
     }
 
-    public void updateUser(Long id, UserDto userDto) {
-        User u = userRepository.findById(id).orElseThrow(NotFoundException::new);
+    public void updateUser(String login, UserDto userDto) {
+        User u = userRepository.findByLogin(login).orElseThrow(NotFoundException::new);
         u.setName(userDto.getName());
         u.setEmail(userDto.getEmail());
         u.setLogin(userDto.getLogin());

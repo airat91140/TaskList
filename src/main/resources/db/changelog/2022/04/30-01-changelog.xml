@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+        <changeSet id="2022-30-01-1" author="Airat">
+            <loadData tableName="user" encoding="UTF-8" file="users.csv" relativeToChangelogFile="true" quotchar="&quot;" separator=";" usePreparedStatements="true">
+                <column type="bigint" name="id"/>
+                <column type="varchar(255)" name="login"/>
+                <column type="varchar(255)" name="password"/>
+                <column type="varchar(255)" name="email"/>
+                <column type="varchar(255)" name="name"/>
+                <column type="varchar(255)" name="role"/>
+            </loadData>
+        </changeSet>
+</databaseChangeLog>

@@ -6,68 +6,70 @@ import org.springframework.web.bind.annotation.*;
 import ru.mephi.pet.domain.*;
 import ru.mephi.pet.service.UserService;
 
+import javax.annotation.security.RolesAllowed;
+import java.security.Principal;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
     private final UserService userService;
-
-    @GetMapping("")
-    public ResponseEntity<Iterable<UserDto>> getUsers() {
-        return ResponseEntity.ok(userService.getUsers());
+    @GetMapping("/")
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    public ResponseEntity<UserDto> getUser(Principal principal) {
+        return ResponseEntity.ok(userService.getUser(principal.getName()));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getUser(id));
+    @GetMapping("/lists")
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    public ResponseEntity<Iterable<TaskListDto>> getUserLists(Principal principal) {
+        return ResponseEntity.ok(userService.getUserLists(principal.getName()));
     }
 
-    @GetMapping("/{id}/lists")
-    public ResponseEntity<Iterable<TaskListDto>> getUserLists(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getUserLists(id));
+    @GetMapping("/groups")
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    public ResponseEntity<Iterable<GroupDto>> getGroups(Principal principal) {
+        return ResponseEntity.ok(userService.getGroups(principal.getName()));
     }
 
-    @GetMapping("/{id}/groups")
-    public ResponseEntity<Iterable<GroupDto>> getGroups(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getGroups(id));
-    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    @DeleteMapping("")
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    public ResponseEntity<Void> deleteUser(Principal principal) {
+        userService.deleteUser(principal.getName());
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{id}/list")
-    public ResponseEntity<Void> deleteList(@PathVariable Long id, @RequestBody TaskListDto list) {
-        userService.deleteList(id, list);
+    @DeleteMapping("/list")
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    public ResponseEntity<Void> deleteList(Principal principal, @RequestBody TaskListDto list) {
+        userService.deleteList(principal.getName(), list);
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("")
-    public ResponseEntity<UserDto> saveUser(@RequestBody UserSaveDto user) {
-        return ResponseEntity.ok(userService.saveUser(user));
+    @PostMapping("/list")
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    public ResponseEntity<TaskListDto> addList(Principal principal, @RequestBody TaskListDto list) {
+        return ResponseEntity.ok(userService.addList(principal.getName(), list));
     }
 
-    @PostMapping("/{id}/list")
-    public ResponseEntity<TaskListDto> addList(@PathVariable Long id, @RequestBody TaskListDto list) {
-        return ResponseEntity.ok(userService.addList(id, list));
+    @PostMapping("/group")
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    public ResponseEntity<GroupDto> addGroup(Principal principal, @RequestBody GroupDto groupDto) {
+        return ResponseEntity.ok(userService.addGroup(principal.getName(), groupDto));
     }
 
-    @PostMapping("/{id}/group")
-    public ResponseEntity<GroupDto> addGroup(@PathVariable Long id, @RequestBody GroupDto groupDto) {
-        return ResponseEntity.ok(userService.addGroup(id, groupDto));
-    }
-
-    @PutMapping("/{id}/password")
-    public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody String password) {
-        userService.updatePassword(id, password);
+    @PutMapping("/password")
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    public ResponseEntity<Void> updatePassword(Principal principal, @RequestBody String password) {
+        userService.updatePassword(principal.getName(), password);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updateUser(@PathVariable Long id, @RequestBody UserDto user) {
-        userService.updateUser(id, user);
+    @PutMapping("")
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    public ResponseEntity<Void> updateUser(Principal principal, @RequestBody UserDto user) {
+        userService.updateUser(principal.getName(), user);
         return ResponseEntity.noContent().build();
     }
 }

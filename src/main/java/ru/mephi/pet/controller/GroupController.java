@@ -10,75 +10,77 @@ import ru.mephi.pet.domain.UserGroupACLDto;
 import ru.mephi.pet.enums.UserACL;
 import ru.mephi.pet.service.GroupService;
 
+import javax.annotation.security.RolesAllowed;
+import java.security.Principal;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/group")
 public class GroupController {
     private final GroupService groupService;
 
-    @GetMapping("")
-    public ResponseEntity<Iterable<GroupDto>> getGroups() {
-        return ResponseEntity.ok(groupService.getGroups());
-    }
-
     @GetMapping("/{id}")
-    public ResponseEntity<GroupDto> getGroup(@PathVariable Long id) {
-        return ResponseEntity.ok(groupService.getGroup(id));
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    public ResponseEntity<GroupDto> getGroup(Principal principal, @PathVariable Long id) {
+        return ResponseEntity.ok(groupService.getGroup(principal.getName(), id));
     }
 
     @GetMapping("/{id}/lists")
-    public ResponseEntity<Iterable<TaskListDto>> getGroupLists(@PathVariable Long id) {
-        return ResponseEntity.ok(groupService.getLists(id));
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    public ResponseEntity<Iterable<TaskListDto>> getGroupLists(Principal principal, @PathVariable Long id) {
+        return ResponseEntity.ok(groupService.getLists(principal.getName(), id));
     }
 
     @GetMapping("/{id}/users")
-    public ResponseEntity<Iterable<UserGroupACLDto>> getUsers(@PathVariable Long id) {
-        return ResponseEntity.ok(groupService.getUsers(id));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGroup(@PathVariable Long id) {
-        groupService.deleteGroup(id);
-        return ResponseEntity.noContent().build();
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    public ResponseEntity<Iterable<UserGroupACLDto>> getUsers(Principal principal, @PathVariable Long id) {
+        return ResponseEntity.ok(groupService.getUsers(principal.getName(), id));
     }
 
     @DeleteMapping("/{id}/list")
-    public ResponseEntity<Void> deleteList(@PathVariable Long id, @RequestBody TaskListDto list) {
-        groupService.deleteList(id, list);
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    public ResponseEntity<Void> deleteList(Principal principal, @PathVariable Long id, @RequestBody TaskListDto list) {
+        groupService.deleteList(principal.getName(), id, list);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/deleteUser{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id, @RequestBody UserDto user) {
-        groupService.deleteUser(id, user);
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    public ResponseEntity<Void> deleteUser(Principal principal, @PathVariable Long id, @RequestBody UserDto user) {
+        groupService.deleteUser(principal.getName(), id, user);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("")
-    public ResponseEntity<GroupDto> saveGroup(@RequestBody GroupDto group) {
-        return ResponseEntity.ok(groupService.saveGroup(group));
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    public ResponseEntity<GroupDto> saveGroup(Principal principal, @RequestBody GroupDto group) {
+        return ResponseEntity.ok(groupService.saveGroup(principal.getName(), group));
     }
 
     @PostMapping("/{id}/list")
-    public ResponseEntity<TaskListDto> addList(@PathVariable Long id, @RequestBody TaskListDto list) {
-        return ResponseEntity.ok(groupService.addList(id, list));
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    public ResponseEntity<TaskListDto> addList(Principal principal, @PathVariable Long id, @RequestBody TaskListDto list) {
+        return ResponseEntity.ok(groupService.addList(principal.getName(), id, list));
     }
 
     @PostMapping("/{id}/user")
-    public ResponseEntity<Void> addUser(@PathVariable Long id, @RequestBody UserDto user) {
-        groupService.addUser(id, user);
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    public ResponseEntity<Void> addUser(Principal principal, @PathVariable Long id, @RequestBody UserDto user) {
+        groupService.addUser(principal.getName(), id, user);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateGroup(@PathVariable Long id, @RequestBody GroupDto group) {
-        groupService.updateGroup(id, group);
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    public ResponseEntity<Void> updateGroup(Principal principal, @PathVariable Long id, @RequestBody GroupDto group) {
+        groupService.updateGroup(principal.getName(), id, group);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}/ACL")
-    public ResponseEntity<Void> updateACL(@PathVariable Long id, @RequestBody UserDto userDto, @RequestBody UserACL userACL) {
-        groupService.updateACL(id, userDto, userACL);
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    public ResponseEntity<Void> updateACL(Principal principal, @PathVariable Long id, @RequestBody UserDto userDto, @RequestBody UserACL userACL) {
+        groupService.updateACL(principal.getName(), id, userDto, userACL);
         return ResponseEntity.noContent().build();
     }
 }

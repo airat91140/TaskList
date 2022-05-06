@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -29,6 +30,8 @@ public class User {
     private Set<Group> groups;
     @OneToMany(cascade = {javax.persistence.CascadeType.ALL})
     private Set<UserGroupACL> groupACLS = new java.util.LinkedHashSet<>();
+    @ColumnDefault("ROLE_USER")
+    private String role;
 
     public User() {
     }

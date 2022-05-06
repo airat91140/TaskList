@@ -7,30 +7,31 @@ import ru.mephi.pet.domain.RecordDto;
 import ru.mephi.pet.domain.TaskListDto;
 import ru.mephi.pet.service.RecordService;
 
+import javax.annotation.security.RolesAllowed;
+import java.security.Principal;
+
 @RequiredArgsConstructor
 @RequestMapping("/api/record")
 @RestController
 public class RecordController {
     private final RecordService recordService;
 
-    @GetMapping("")
-    ResponseEntity<Iterable<RecordDto>> getRecords() {
-        return ResponseEntity.ok(recordService.getRecords());
-    }
-
     @GetMapping("/{id}")
-    ResponseEntity<RecordDto> getRecord(@PathVariable Long id) {
-        return ResponseEntity.ok(recordService.getRecord(id));
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    ResponseEntity<RecordDto> getRecord(Principal principal, @PathVariable Long id) {
+        return ResponseEntity.ok(recordService.getRecord(principal.getName(), id));
     }
 
     @GetMapping("/{id}/list")
-    ResponseEntity<TaskListDto> getList(@PathVariable Long id) {
-        return ResponseEntity.ok(recordService.getList(id));
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    ResponseEntity<TaskListDto> getList(Principal principal, @PathVariable Long id) {
+        return ResponseEntity.ok(recordService.getList(principal.getName(), id));
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<Void> updateDeadline(@PathVariable Long id, @RequestBody RecordDto recordDto) {
-        recordService.updateRecord(id, recordDto);
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    ResponseEntity<Void> updateDeadline(Principal principal, @PathVariable Long id, @RequestBody RecordDto recordDto) {
+        recordService.updateRecord(principal.getName(), id, recordDto);
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,0 +1,2 @@
+id;login;password;email;name;role
+1;admin;$2a$12$7/hM3D34irRVOSsxmzV7WeSSC0VYvi5Nf6B0tVSbWVybIPSDOrxh.;admin@mail.ru;admin;ROLE_ADMIN
